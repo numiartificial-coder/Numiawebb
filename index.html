@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Numia · Menos tareas repetidas. Más tiempo para decidir.</title>
+<meta name="description" content="Tecnología y datos a la medida de tu PyME. Automatizamos lo que hoy hacés a mano, sin reemplazar las herramientas que ya usás.">
+<style>
+:root{
+  --crema:#F5F1E8; --carbon:#33302C; --teal:#3B7D86; --arena:#E8E1D2; --teal-claro:#CFE3E5; --gris:#8A857C;
+  --vidrio:rgba(255,255,255,.55); --vidrio-fuerte:rgba(255,255,255,.72); --borde:rgba(51,48,44,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:110px}
+body{background:var(--crema);color:var(--carbon);font-family:Inter,"Helvetica Neue",Arial,sans-serif;font-size:17px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* Fondo con formas ovaladas */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 42% 34% at 8% 14%, rgba(207,227,229,.85), rgba(207,227,229,0) 70%),
+    radial-gradient(ellipse 38% 30% at 96% 46%, rgba(232,225,210,.95), rgba(232,225,210,0) 70%),
+    radial-gradient(ellipse 34% 26% at 30% 96%, rgba(207,227,229,.55), rgba(207,227,229,0) 70%);
+}
+
+.logo{font-weight:300;letter-spacing:-.02em;line-height:1;white-space:nowrap;text-decoration:none}
+.logo .ia{color:var(--teal)}
+
+/* Header flotante en pastilla */
+header.top{position:sticky;top:16px;z-index:20;margin:16px auto 0;max-width:1080px;padding:0 24px}
+header.top .bar{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 10px 0 28px;border-radius:999px;background:var(--vidrio-fuerte);border:1px solid var(--borde);-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);box-shadow:0 8px 30px rgba(51,48,44,.06)}
+header.top .logo{font-size:26px}
+nav{display:flex;align-items:center;gap:26px}
+nav a.l{text-decoration:none;font-size:15px;opacity:.75;transition:opacity .3s,color .3s}
+nav a.l:hover{opacity:1;color:var(--teal)}
+
+/* Botones y pastillas */
+.btn{display:inline-block;padding:14px 26px;border-radius:999px;background:var(--carbon);color:var(--crema);text-decoration:none;font-weight:500;font-size:16px;transition:background .3s,transform .3s}
+.btn:hover{background:var(--teal);transform:translateY(-2px)}
+.btn.sm{padding:10px 20px;font-size:15px}
+.btn.ghost{background:transparent;color:var(--carbon);border:1px solid rgba(51,48,44,.35)}
+.btn.ghost:hover{background:var(--carbon);color:var(--crema);border-color:var(--carbon)}
+.pill{display:inline-block;padding:8px 18px;border-radius:999px;background:var(--vidrio-fuerte);border:1px solid var(--borde);font-size:14px}
+
+/* Secciones */
+section{padding:112px 0}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.14em;opacity:.7;margin-bottom:14px}
+h1{font-weight:300;font-size:clamp(40px,5.6vw,62px);letter-spacing:-.02em;line-height:1.1}
+h2{font-weight:400;font-size:clamp(28px,3.4vw,38px);letter-spacing:-.01em;line-height:1.2;margin-bottom:12px}
+h3{font-weight:500;font-size:18px;margin-bottom:6px;line-height:1.3}
+.lead{opacity:.8;max-width:600px;font-size:18px}
+.glass{background:var(--vidrio);border:1px solid var(--borde);border-radius:28px;padding:28px;-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);transition:transform .4s,box-shadow .4s}
+.glass:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(51,48,44,.08)}
+
+/* Revelado al scroll */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* Hero */
+.hero{padding:88px 0 110px;border-top:0}
+.hero .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.hero .logo{font-size:88px;opacity:0;transform:translateY(10px);animation:entra 1s .1s forwards}
+.hero .logo .ia{display:inline-block;opacity:0;transform:translateX(-14px);animation:ia 1s .7s forwards}
+@keyframes entra{to{opacity:1;transform:none}}
+@keyframes ia{to{opacity:1;transform:none}}
+.hero .pill{margin-top:28px;opacity:0;animation:entra .8s 1s forwards}
+.hero h1{margin-top:24px}
+.hero h1 span{display:inline-block;opacity:0;transform:translateY(18px);animation:entra .8s forwards}
+.hero h1 span:nth-child(1){animation-delay:1.2s}
+.hero h1 span:nth-child(2){animation-delay:1.4s}
+.hero h1 span:nth-child(3){animation-delay:1.6s}
+.hero h1 em{font-style:normal;color:var(--teal)}
+.hero .lead{margin-top:22px;opacity:0;animation:entra .8s 1.8s forwards}
+.hero .btns{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:entra .8s 2s forwards}
+
+/* Tarjeta demo del hero */
+.demo{border-radius:36px;padding:26px;opacity:0;transform:translateY(20px);animation:entra 1s 1.2s forwards}
+.tabs{display:flex;padding:6px;border-radius:999px;background:rgba(255,255,255,.45);border:1px solid var(--borde);gap:4px}
+.tabs button{flex:1;border:0;background:transparent;color:var(--carbon);font:inherit;font-size:14px;padding:10px 12px;border-radius:999px;cursor:pointer;transition:background .3s,color .3s}
+.tabs button[aria-selected="true"]{background:var(--carbon);color:var(--crema)}
+.demo .meta{font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin:22px 4px 14px}
+.steps{display:grid;gap:10px}
+.step{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:22px;background:transparent;opacity:.4;transition:opacity .6s,background .6s,transform .6s}
+.step .dot{width:12px;height:12px;border-radius:50%;background:var(--gris);flex:none;transition:background .6s}
+.step small{display:block;opacity:.75;font-size:14px;line-height:1.4}
+.step.done{opacity:.85}
+.step.done .dot{background:var(--carbon)}
+.step.on{opacity:1;background:#fff;transform:translateX(4px);box-shadow:0 8px 24px rgba(51,48,44,.07)}
+.step.on .dot{background:var(--teal);box-shadow:0 0 0 6px rgba(59,125,134,.15)}
+.demo .foot{margin:16px 4px 0;padding-top:16px;border-top:1px solid var(--borde);font-size:14px;opacity:.8}
+.demo .ficticio{display:block;margin:14px 4px 0;font-size:12px;opacity:.6}
+
+/* Problemas */
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px}
+.grid4 .glass{padding:26px 24px;border-radius:24px}
+.grid4 p{font-size:15px;opacity:.75}
+
+/* Servicios */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px}
+.serv{border-radius:32px;padding:34px}
+.serv .pill{font-size:12px;padding:6px 14px;margin-bottom:18px;color:var(--teal)}
+.serv p{opacity:.8}
+.serv .prim{display:inline-block;margin-top:14px;font-size:12px;opacity:.6}
+
+/* Pasos */
+.pasos{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.paso{border-radius:32px;padding:30px}
+.paso .n{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--carbon);color:var(--crema);font-weight:300;font-size:18px;margin-bottom:18px}
+.paso p{opacity:.8;font-size:15px}
+
+/* FAQ */
+.faq{margin-top:44px;display:grid;gap:12px}
+details{border-radius:24px;padding:22px 26px;background:var(--vidrio);border:1px solid var(--borde);transition:box-shadow .4s}
+details[open]{box-shadow:0 12px 30px rgba(51,48,44,.06)}
+summary{cursor:pointer;font-weight:500;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--teal);font-size:24px;line-height:1;transition:transform .3s}
+details[open] summary::after{content:"−"}
+details p{opacity:.8;margin-top:12px;max-width:640px;font-size:16px}
+
+/* Contacto */
+.contacto{padding:0 0 112px}
+.contacto .card{background:var(--carbon);color:var(--crema);border-radius:40px;padding:64px 56px;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+.contacto .label{color:var(--teal-claro);opacity:1}
+.contacto .big{font-weight:300;font-size:clamp(28px,3.6vw,40px);line-height:1.2}
+.contacto .sub{color:var(--teal-claro);margin-top:14px;font-size:16px}
+.contacto .links{display:grid;gap:14px;justify-items:start}
+.contacto .links a{text-decoration:none;font-size:16px}
+.contacto .links a.mail{font-size:18px;border-bottom:1px solid var(--teal-claro);padding-bottom:2px}
+.contacto .links .btn{background:var(--crema);color:var(--carbon)}
+.contacto .links .btn:hover{background:var(--teal-claro);color:var(--carbon)}
+.contacto .links a.ig{color:var(--teal-claro)}
+
+footer{padding:36px 0 48px;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer .logo{font-size:22px}
+
+@media (max-width:900px){
+  .hero .grid{grid-template-columns:1fr;gap:44px}
+  .hero .logo{font-size:68px}
+  .grid4,.pasos{grid-template-columns:1fr 1fr}
+  .contacto .card{grid-template-columns:1fr;padding:44px 32px}
+  nav a.l{display:none}
+}
+@media (max-width:560px){
+  .grid2,.grid4,.pasos{grid-template-columns:1fr}
+  header.top{padding:0 12px;top:10px}
+  header.top .bar{padding:0 8px 0 20px}
+  section{padding:84px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .hero .logo,.hero .logo .ia,.hero h1 span,.hero .pill,.hero .lead,.hero .btns,.demo,.reveal{opacity:1!important;transform:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="bar">
+    <a href="#inicio" class="logo">Num<span class="ia">ia</span></a>
+    <nav>
+      <a class="l" href="#servicios">Servicios</a>
+      <a class="l" href="#proceso">Cómo arrancamos</a>
+      <a class="l" href="#preguntas">Preguntas</a>
+      <a class="btn sm" href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<section id="inicio" class="hero">
+  <div class="wrap grid">
+    <div>
+      <div class="logo">Num<span class="ia">ia</span></div>
+      <span class="pill">Tecnología y datos a la medida de tu PyME.</span>
+      <h1><span>Menos tareas repetidas.</span> <span><em>Más tiempo</em></span> <span>para decidir.</span></h1>
+      <p class="lead">Automatizamos lo que hoy hacés a mano y ordenamos los datos de tu negocio, sin reemplazar las herramientas que ya usás.</p>
+      <div class="btns">
+        <a href="#contacto" class="btn">Contacto</a>
+        <a href="#servicios" class="btn ghost">Ver servicios</a>
+      </div>
+    </div>
+
+    <div class="demo glass" id="demo">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-tab="wa">WhatsApp</button>
+        <button role="tab" aria-selected="false" data-tab="form">Formularios</button>
+        <button role="tab" aria-selected="false" data-tab="panel">Tablero</button>
+      </div>
+      <div class="meta" id="meta"></div>
+      <div class="steps" id="steps"></div>
+      <div class="foot" id="foot"></div>
+      <span class="ficticio">Ejemplos ficticios, con datos de muestra. No representan clientes reales.</span>
+    </div>
+  </div>
+</section>
+
+<section id="problemas">
+  <div class="wrap">
+    <p class="label reveal">¿Te suena?</p>
+    <h2 class="reveal">Lo que más tiempo se lleva</h2>
+    <div class="grid4">
+      <div class="glass reveal"><h3>Consultas sin respuesta</h3><p>Sobre todo fuera de horario.</p></div>
+      <div class="glass reveal"><h3>Presupuestos a mano</h3><p>Las mismas preguntas, una y otra vez.</p></div>
+      <div class="glass reveal"><h3>Datos en planillas</h3><p>Copiar de una a otra, con errores.</p></div>
+      <div class="glass reveal"><h3>Decisiones sin números</h3><p>No sabés qué entra ni qué se vende.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="servicios">
+  <div class="wrap">
+    <p class="label reveal">Servicios</p>
+    <h2 class="reveal">Cuatro líneas de trabajo</h2>
+    <div class="grid2">
+      <div class="glass serv reveal">
+        <span class="pill">Agentes</span>
+        <h3>Asistentes de WhatsApp e Instagram</h3>
+        <p>Responden consultas, también fuera de horario, y derivan a una persona cuando hace falta.</p>
+      </div>
+      <div class="glass serv reveal">
+        <span class="pill">Plataformas</span>
+        <h3>Datos y tableros</h3>
+        <p>Tus números en un solo lugar, con los indicadores que definís vos.</p>
+        <span class="prim">Primera versión</span>
+      </div>
+      <div class="glass serv reveal">
+        <span class="pill">Integraciones</span>
+        <h3>Conexión y automatización</h3>
+        <p>La información viaja sola entre tus herramientas. Conectamos lo que ya usás.</p>
+      </div>
+      <div class="glass serv reveal">
+        <span class="pill">Portales de clientes</span>
+        <h3>Software a medida</h3>
+        <p>Una herramienta propia para el proceso que ninguna solución estándar cubre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proceso">
+  <div class="wrap">
+    <p class="label reveal">Cómo arrancamos</p>
+    <h2 class="reveal">Primero una versión que puedas probar</h2>
+    <div class="pasos">
+      <div class="glass paso reveal"><span class="n">01</span><h3>Entendemos tu operación</h3><p>Qué tarea te lleva más tiempo y qué herramientas usás hoy.</p></div>
+      <div class="glass paso reveal"><span class="n">02</span><h3>Armamos una primera versión</h3><p>Un proceso acotado, que probás con tu equipo.</p></div>
+      <div class="glass paso reveal"><span class="n">03</span><h3>Ajustamos y crecemos</h3><p>Medimos qué funcionó y decidimos el siguiente paso.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="preguntas">
+  <div class="wrap">
+    <p class="label reveal">Preguntas</p>
+    <h2 class="reveal">Lo que suele preguntarse</h2>
+    <div class="faq">
+      <details class="reveal">
+        <summary>¿Tengo que cambiar los sistemas que ya uso?</summary>
+        <p>No. Nos conectamos a lo que ya tenés. Si algo no se puede integrar, lo decimos antes de empezar.</p>
+      </details>
+      <details class="reveal">
+        <summary>¿Cuánto cuesta?</summary>
+        <p>Depende del alcance. Lo vemos en la primera conversación y te enviamos una propuesta por escrito.</p>
+      </details>
+      <details class="reveal">
+        <summary>¿Garantizan resultados?</summary>
+        <p>Acordamos cómo medir la mejora antes de empezar. Lo que depende del volumen o de tu equipo lo aclaramos desde el principio.</p>
+      </details>
+      <details class="reveal">
+        <summary>¿Y si no conviene automatizar?</summary>
+        <p>Te lo decimos con los datos que tenemos. A veces conviene ordenar el proceso primero, y eso también te lo decimos.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="contacto" class="contacto">
+  <div class="wrap">
+    <div class="card reveal">
+      <div>
+        <p class="label">Contacto</p>
+        <p class="big">Contanos qué tarea te lleva más tiempo.</p>
+        <p class="sub">Lo vemos juntos y te decimos por dónde tiene sentido empezar.</p>
+      </div>
+      <div class="links">
+        <a class="btn" href="mailto:numiartificial@gmail.com?subject=Consulta%20-%20Numia">Escribinos</a>
+        <a class="mail" href="mailto:numiartificial@gmail.com?subject=Consulta%20-%20Numia">numiartificial@gmail.com</a>
+        <a class="ig" href="https://www.instagram.com/numia.tech/" target="_blank" rel="noopener">Instagram · @numia.tech</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo">Num<span class="ia">ia</span></div>
+    <span>Tecnología y datos a la medida de tu PyME.</span>
+  </div>
+</footer>
+
+<script>
+  // Contenido de la tarjeta demo (ficticio)
+  const TABS = {
+    wa: {
+      meta: 'Consulta por WhatsApp · caso ficticio',
+      steps: [
+        ['Llega una consulta', '“¿Tienen lugar para 2 el fin de semana?”'],
+        ['Responde lo frecuente', 'Disponibilidad, precio y condiciones'],
+        ['Deriva lo que necesita decisión', 'Pedido de reserva o caso especial']
+      ],
+      foot: 'Responde con la información que vos cargaste: tarifas, políticas y horarios.'
+    },
+    form: {
+      meta: 'Formulario de presupuesto · caso ficticio',
+      steps: [
+        ['Entra un pedido', 'Nombre, fecha y qué necesita'],
+        ['Se ordena solo', 'Datos completos, sin preguntas repetidas'],
+        ['Llega al equipo', 'Con el presupuesto preparado para revisar']
+      ],
+      foot: 'El equipo revisa y aprueba antes de enviar.'
+    },
+    panel: {
+      meta: 'Panel de la semana · ejemplo ficticio',
+      steps: [
+        ['Se cargan las consultas', 'De WhatsApp, formularios y mail'],
+        ['Se calculan los indicadores', 'Los que definiste con tu equipo'],
+        ['Ves lo que pasa', 'Sin armar reportes a mano']
+      ],
+      foot: 'Números de muestra, sin relación con clientes reales.'
+    }
+  };
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stepsEl = document.getElementById('steps');
+  const metaEl = document.getElementById('meta');
+  const footEl = document.getElementById('foot');
+  let current = 'wa', idx = 0, timer = null;
+
+  function render(key) {
+    current = key;
+    const t = TABS[key];
+    metaEl.textContent = t.meta;
+    footEl.textContent = t.foot;
+    stepsEl.innerHTML = t.steps.map(([title, desc]) =>
+      `<div class="step"><span class="dot"></span><div><strong style="font-weight:500">${title}</strong><small>${desc}</small></div></div>`
+    ).join('');
+    idx = 0;
+    paint();
+    if (!reduce) { clearInterval(timer); timer = setInterval(next, 2400); }
+  }
+
+  function paint() {
+    const items = stepsEl.querySelectorAll('.step');
+    items.forEach((el, i) => {
+      el.classList.remove('on', 'done');
+      if (i < idx) el.classList.add('done');
+      if (i === idx) el.classList.add('on');
+    });
+  }
+
+  function next() {
+    const n = TABS[current].steps.length;
+    idx = (idx + 1) % n;
+    paint();
+  }
+
+  document.querySelectorAll('.tabs button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tabs button').forEach((b) => b.setAttribute('aria-selected', 'false'));
+      btn.setAttribute('aria-selected', 'true');
+      render(btn.dataset.tab);
+    });
+  });
+
+  render('wa');
+  if (reduce) { stepsEl.querySelectorAll('.step').forEach((s) => s.classList.add('on')); }
+
+  // Revelado al scroll
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach((el) => obs.observe(el));
+</script>
+</body>
+</html>
